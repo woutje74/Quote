@@ -27,6 +27,11 @@ app.get('/api/quotes', (req, res, next) => {
     res.send({quotes});
     }
 })
+app.put('/api/quotes', (req, res, next) => {
+    
+
+})
+
 
 app.post('/api/quotes', (req, res, next) => {
     const newQuote = req.query;

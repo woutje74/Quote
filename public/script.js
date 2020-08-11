@@ -1,6 +1,7 @@
 const fetchAllButton = document.getElementById('fetch-quotes');
 const fetchRandomButton = document.getElementById('fetch-random');
 const fetchByAuthorButton = document.getElementById('fetch-by-author');
+/* const updateQuoteButton = document.getElementById('update-quote');*/
 
 const quoteContainer = document.getElementById('quote-container');
 const quoteText = document.querySelector('.quote');
