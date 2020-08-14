@@ -11,21 +11,22 @@
   <h1>Quote API</h1>
   <nav>
     <a href="index.html">Home</a>
-    <a href="update-quote.html">Update a Quote</a>
+    <a href="add-quote.html">Add a New Quote</a>
   </nav>
-  <h2>Add a New Quote</h2>
+  <h2>Find Quote</h2>
   <div class="inputs">
-    <label for="quote">Quote text:</label>
-    <input id="quote" value="">
-    <label for="person">Person:</label>
-    <input id="person" value="">
+    <label for="quoteId">Quote id:</label>
+    <input id="quoteId" value="" required>
+    <button id="fetch-by-id">Find Quote</button>
+  <div id="quote-container">
+
   </div>
   <div>
-    <button id="submit-quote">Submit Your Quote</button>
+      <button id="update-quote">Update Quote</button>
   </div>
   <div id="new-quote">
     
   </div>
-  <script src="add-quote.js"></script>
+  <script src="update-quote.js"></script>
 </body>
 </html>

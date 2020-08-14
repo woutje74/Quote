@@ -2,7 +2,9 @@ const express = require('express');
 const app = express();
 
 const { quotes } = require('./data');
-const { getRandomElement, filterItems } = require('./utils');
+const { getRandomElement, getIndexById, updateElement, deleteQuote } = require('./utils');
+
+let idCounter = 13;
 
 const PORT = process.env.PORT || 3000;
 
@@ -15,7 +17,7 @@ app.get('/api/quotes/random', (req, res, next) => {
 })
 
 
-app.get('/api/quotes', (req, res, next) => {
+/*app.get('/api/quotes', (req, res, next) => {
     const authorQuery = req.query.person;
     if(authorQuery){
     console.log(authorQuery)
@@ -26,22 +28,66 @@ app.get('/api/quotes', (req, res, next) => {
     } else {
     res.send({quotes});
     }
-})
-app.put('/api/quotes', (req, res, next) => {
-    
+})*/
 
+app.get('/api/quotes', (req, res, next) => {
+    const author = req.query.person;
+    const idQuery = req.query.id;
+    if(idQuery){
+    console.log(idQuery)
+    const filtered = quotes.filter((quote) => quote.id == idQuery
+    );
+    console.log(filtered);
+    res.send({quotes: filtered});
+    } else if (author) {
+        console.log(author)
+    const filtered = quotes.filter((quote) => quote.person == author
+    );
+    console.log(filtered);
+    res.send({quotes: filtered});
+    } else {
+    res.send({quotes});
+    }
+})
+
+app.put('/api/quotes', (req, res, next) => {
+    const updateIndex = getIndexById(req.query.id, quotes)
+    const updatedQuote = req.query;
+    if(updateIndex !== -1 && !req.query.person){
+            updateElement(req.query.id, updatedQuote, quotes);
+            res.send(quotes[updateIndex]);
+          } else {
+            res.status(404).send('Query update not allowed');
+          }
 })
 
 
 app.post('/api/quotes', (req, res, next) => {
-    const newQuote = req.query;
+    const newQuote = {
+        "id": null,
+        "quote": null,
+        "person": null
+    }
+    newQuote.id = (idCounter + 1);
+    newQuote.quote = req.query.quote;
+    newQuote.person = req.query.person;
     if(newQuote.quote && newQuote.person){
         quotes.push(newQuote);
+        idCounter++;
         res.send({quote: newQuote});
     } else {
         res.status(400).send();
     }
 })
 
+app.delete('/api/quotes', (req, res, next) => {
+    const quoteIndex = getIndexById(req.query.id, quotes);
+    if (quoteIndex){
+        deleteQuote(quoteIndex);
+        res.status(204).send();
+    } else {
+        res.status(404).send('Quote not found')
+    }
+})
 
 app.listen(PORT, ()=>{console.log(`Listening on port ${PORT}`)})
