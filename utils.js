@@ -23,17 +23,8 @@ const updateElement = (id, queryArguments, elementList) => {
   return elementList[elementIndex];
 };
 
-const deleteQuote = (quoteIndex) => {
-  if(quoteIndex){
-    quotes.slice(quoteIndex, 1)
-    } else {
-      return `Quote not found`;
-    }
-  };
-
 module.exports = {
   getRandomElement,
   getIndexById,
-  updateElement,
-  deleteQuote
+  updateElement
 };

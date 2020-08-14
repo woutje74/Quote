@@ -2,7 +2,8 @@ const express = require('express');
 const app = express();
 
 const { quotes } = require('./data');
-const { getRandomElement, getIndexById, updateElement, deleteQuote } = require('./utils');
+const { getRandomElement, getIndexById, updateElement } = require('./utils');
+
 
 let idCounter = 13;
 
@@ -16,19 +17,6 @@ app.get('/api/quotes/random', (req, res, next) => {
     res.send({quote: randomQuote});
 })
 
-
-/*app.get('/api/quotes', (req, res, next) => {
-    const authorQuery = req.query.person;
-    if(authorQuery){
-    console.log(authorQuery)
-    const filtered = quotes.filter((quote) => quote.person == authorQuery
-    );
-    console.log(filtered);
-    res.send({quotes: filtered});
-    } else {
-    res.send({quotes});
-    }
-})*/
 
 app.get('/api/quotes', (req, res, next) => {
     const author = req.query.person;
@@ -82,12 +70,13 @@ app.post('/api/quotes', (req, res, next) => {
 
 app.delete('/api/quotes', (req, res, next) => {
     const quoteIndex = getIndexById(req.query.id, quotes);
-    if (quoteIndex){
-        deleteQuote(quoteIndex);
-        res.status(204).send();
-    } else {
-        res.status(404).send('Quote not found')
-    }
+    console.log(`Index of ${req.query.id} = ${quoteIndex}`);
+  if (quoteIndex !== -1) {
+    quotes.splice(quoteIndex, 1);
+    res.status(204).send(quotes[quoteIndex]);
+  } else {
+    res.status(404).send();
+  }
 })
 
 app.listen(PORT, ()=>{console.log(`Listening on port ${PORT}`)})

@@ -1,10 +1,7 @@
-const { quotes } = require("./data");
-
 const fetchAllButton = document.getElementById('fetch-quotes');
 const fetchRandomButton = document.getElementById('fetch-random');
 const fetchByAuthorButton = document.getElementById('fetch-by-author');
 const updateQuoteButton = document.getElementById('update-quote');
-const deleteQuoteButton = document.getElementById('delete-quote');  
 
 
 const quoteContainer = document.getElementById('quote-container');
@@ -15,15 +12,11 @@ const resetQuotes = () => {
   quoteContainer.innerHTML = '';
 }
 
+
 const renderError = response => {
   quoteContainer.innerHTML = `<p>Your request returned an error from the server: </p>
 <p>Code: ${response.status}</p>
 <p>${response.statusText}</p>`;
-}
-
-const renderMessage = response => {
-  quoteContainer.innerHTML = `<p>Quote has been succesfully deleted.</p>
-  <p>QuoteId: ${response.id}</p>` 
 }
 
 const renderQuotes = (quotes = []) => {
@@ -32,17 +25,39 @@ const renderQuotes = (quotes = []) => {
     quotes.forEach(quote => {
       const newQuote = document.createElement('div');
       newQuote.className = 'single-quote';
-      newQuote.innerHTML = `<div><div id="quote-id"> ${quote.id}</div><div class="quote-text">${quote.quote}</div></div>
-      <div class="attribution">- ${quote.person}</div>
-      <div><button id="update-quote">Update Quote</button></div>
-      <div><button id="delete-quote">Delete Quote</button></div>`;
-      quoteContainer.appendChild(newQuote);
+      newQuote.innerHTML = `
+        <div id="${quote.id}" value="${quote.id}">${quote.id}
+          <div id="quote${quote.id}">
+            <div class="quote-text">${quote.quote}</div>
+            <div class="attribution">- ${quote.person}</div>
+          </div>
+        </div>
+        <div><button id="update-quote">Update Quote</button></div>
+        <div><button id="delete-quote" onclick="deleteQuoteFunction(${quote.id})">Delete Quote</button></div>
+      </div>`;
+      quoteContainer.appendChild(newQuote)
     });
+    /*const deleteQuoteDirect = document.getElementById('delete-quote');
+    deleteQuoteDirect.addEventListener('click', deleteQuoteFunction);*/
   } else {
     quoteContainer.innerHTML = '<p>Your request returned no quotes.</p>';
   }
 }
 
+const deleteQuoteFunction = (quoteId) => {
+  /*const quoteId = document.getElementById('quote-id').value;*/
+  console.log(`Looking for ${quoteId}`);
+  fetch(`api/quotes?id=${quoteId}`, {method: 'DELETE'})
+  .then(response => response.text())
+  .then(() => {
+    const newMessage = document.getElementById(`${quoteId}`);
+    const oldChild = document.getElementById(`quote${quoteId}`);
+    newMessage.innerHTML = `
+    <h3>Your quote was deleted!</h3>`;
+    newMessage.removeChild(oldChild);
+    })
+  .catch(error => console.log('error', error));
+};
 
 
 fetchAllButton.addEventListener('click', () => {
@@ -88,17 +103,5 @@ fetchByAuthorButton.addEventListener('click', () => {
   });
 });
 
-deleteQuoteButton.addEventListener('click', () => {
-  const quoteId = document.getElementById('quote.id').value;
-  fetch(`api/quotes?id=${quoteId}`)
-  .then(response => {
-    if (response.ok) {
-      return response.json();
-    } else {
-      renderError(response);
-    }
-  })
-  .then( response => {
-     renderMessage(response);
-  })
-});
+
+
