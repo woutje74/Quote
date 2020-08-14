@@ -38,6 +38,12 @@ input {
   padding: 10px;
 }
 
+textarea {
+  font-size: 13px;
+  font-family: 'Nunito Sans', sans-serif;
+  padding: 5% 5px;
+  text-align: center;
+}
 button {
   margin: 5px;
   cursor: pointer;

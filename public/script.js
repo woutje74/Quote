@@ -12,7 +12,6 @@ const resetQuotes = () => {
   quoteContainer.innerHTML = '';
 }
 
-
 const renderError = response => {
   quoteContainer.innerHTML = `<p>Your request returned an error from the server: </p>
 <p>Code: ${response.status}</p>
@@ -28,24 +27,21 @@ const renderQuotes = (quotes = []) => {
       newQuote.innerHTML = `
         <div id="${quote.id}" value="${quote.id}">${quote.id}
           <div id="quote${quote.id}">
-            <div class="quote-text">${quote.quote}</div>
-            <div class="attribution">- ${quote.person}</div>
-            <div><button id="update-quote">Update Quote</button></div>
-            <div><button id="delete-quote" onclick="deleteQuoteFunction(${quote.id})">Delete Quote</button></div>
+            <textarea id="quote-text${quote.id}" value="${quote.quote}" rows="3" cols="50">${quote.quote}</textarea>
+            <div id="attribution${quote.id}" value="${quote.person}">- ${quote.person}</div>
+            <div><button id="update-quote" onclick="updateQuoteFunction(${quote.id})">Update Quote</button>
+            <button id="delete-quote" onclick="deleteQuoteFunction(${quote.id})">Delete Quote</button></div>            
+            <div></div>
           </div>
         </div>`;
       quoteContainer.appendChild(newQuote)
     });
-    /*const deleteQuoteDirect = document.getElementById('delete-quote');
-    deleteQuoteDirect.addEventListener('click', deleteQuoteFunction);*/
   } else {
     quoteContainer.innerHTML = '<p>Your request returned no quotes.</p>';
   }
 }
 
 const deleteQuoteFunction = (quoteId) => {
-  /*const quoteId = document.getElementById('quote-id').value;*/
-  console.log(`Looking for ${quoteId}`);
   fetch(`api/quotes?id=${quoteId}`, {method: 'DELETE'})
   .then(response => response.text())
   .then(() => {
@@ -57,6 +53,23 @@ const deleteQuoteFunction = (quoteId) => {
     })
   .catch(error => console.log('error', error));
 };
+
+const updateQuoteFunction = (quoteId) => {
+  const updatedQuote = document.getElementById(`quote-text${quoteId}`).value;
+  const updatedPerson = document.getElementById(`attribution${quoteId}`).value;
+  fetch(`/api/quotes?id=${quoteId}&quote=${updatedQuote}`, {
+    method: 'PUT',
+  })
+  .then(response => response.json())
+  .then((response) => {
+    const newMessage = document.getElementById(`${quoteId}`);
+    newMessage.innerHTML = `
+    <h3>Congrats, your quote was updated!</h3>
+    <div class="quote-text">${response.quote}</div>
+    <div class="attribution">- ${response.person}</div>
+    `
+    })
+}
 
 
 fetchAllButton.addEventListener('click', () => {
