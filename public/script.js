@@ -30,11 +30,10 @@ const renderQuotes = (quotes = []) => {
           <div id="quote${quote.id}">
             <div class="quote-text">${quote.quote}</div>
             <div class="attribution">- ${quote.person}</div>
+            <div><button id="update-quote">Update Quote</button></div>
+            <div><button id="delete-quote" onclick="deleteQuoteFunction(${quote.id})">Delete Quote</button></div>
           </div>
-        </div>
-        <div><button id="update-quote">Update Quote</button></div>
-        <div><button id="delete-quote" onclick="deleteQuoteFunction(${quote.id})">Delete Quote</button></div>
-      </div>`;
+        </div>`;
       quoteContainer.appendChild(newQuote)
     });
     /*const deleteQuoteDirect = document.getElementById('delete-quote');
